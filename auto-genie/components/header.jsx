@@ -16,9 +16,9 @@ const Header = async ({isAdminPage = false}) => {
         <Image 
         src={"/logoAG.png"} 
         alt='AutoGenie'
-        width={400}
-        height={80}
-        className='h-18 w-auto object-contain'
+        width={450}
+        height={85}
+        className='h-19 w-auto object-contain'
         />
         {isAdminPage && (
           <span className='text-xs font-extralight'>
