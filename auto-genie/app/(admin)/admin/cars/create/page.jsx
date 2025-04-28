@@ -8,8 +8,8 @@ export const metadata = {
 
 const AddCarPage = () => {
   return (
-    <div className='p-6'>
-        <h1 className='text-2xl font-bold mb-6'>
+    <div className='p-10'>
+        <h1 className='text-2xl font-bold mb-6 text-blue-700'>
             Add New Car
         </h1>
 
