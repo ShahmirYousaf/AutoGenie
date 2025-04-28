@@ -1,5 +1,5 @@
 import React from 'react'
-import AddNewCar from '../_components/add-new-car';
+import AddNewCar from './_components/add-new-car';
 
 export const metadata = {
     title:"Add New Car | AutoGenie Admin",
