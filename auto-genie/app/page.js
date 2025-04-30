@@ -153,7 +153,7 @@ export default function Home() {
               href={`/cars?bodyType=${bodyT.name}`}
               className="relative group cursor-pointer">
               
-              <div className="overflow-hidden rounder-lg flex justify-end h-28 mb-4 relative">
+              <div className="overflow-hidden rounder-lg flex justify-end h-28 mb-6 relative">
                 <Image 
                 src={bodyT.image}
                 alt={bodyT.name}

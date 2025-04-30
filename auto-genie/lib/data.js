@@ -47,16 +47,16 @@ export const carMakes = [
   { id: 1, name: "Hyundai", image: "/make/hyundai.webp" },
   { id: 2, name: "Honda", image: "/make/honda.webp" },
   { id: 3, name: "BMW", image: "/make/bmw.webp" },
-  { id: 4, name: "Tata", image: "/make/tata.webp" },
-  { id: 5, name: "Mahindra", image: "/make/mahindra.webp" },
+  { id: 4, name: "MG", image: "/make/mg.png" },
+  { id: 5, name: "Mercedes", image: "/make/mercedes.png" },
   { id: 6, name: "Ford", image: "/make/ford.webp" },
 ];
 
 export const bodyTypes = [
-  { id: 1, name: "SUV", image: "/body/suv.webp" },
-  { id: 2, name: "Sedan", image: "/body/sedan.webp" },
-  { id: 3, name: "Hatchback", image: "/body/hatchback.webp" },
-  { id: 4, name: "Convertible", image: "/body/convertible.webp" },
+  { id: 1, name: "SUV", image: "/body/suv1.webp" },
+  { id: 2, name: "Sedan", image: "/body/sedan1.webp" },
+  { id: 3, name: "Hatchback", image: "/body/hatchback.jpeg" },
+  { id: 4, name: "Convertible", image: "/body/convertible1.png" },
 ];
 
 export const faqItems = [
