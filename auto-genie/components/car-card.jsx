@@ -52,7 +52,7 @@ const handleToggleSave = async(e) => {
                 <h3 className='text-lg font-bold line-clamp-1'>
                     {car.make} {car.model}
                 </h3>
-                <span className='text-xl font-bold text-blue-600'> ${car.price.toLocaleString()}</span>
+                <span className='text-xl font-bold text-blue-600'> PKR {car.price.toLocaleString()}</span>
             </div>
             
             <div className='text-gray-600 mb-2 flex items-center'>

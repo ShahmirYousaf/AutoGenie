@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Input } from './ui/input';
 import { Camera, Upload } from 'lucide-react';
 import { Button } from './ui/button';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import useFetch from '@/hooks/useFetch';
+import { processImageSearch } from '@/actions/home';
 
 const HomeSearch = () => {
 
@@ -17,6 +19,13 @@ const HomeSearch = () => {
   const [isUploading, setIsUploading] = useState(false);
 
   const router = useRouter();
+
+  const {
+    loading: isProcessing,
+    fn: processImageFn,
+    data: processResult,
+    error: processError,
+  } = useFetch(processImageSearch);
 
   const handleTextSubmit = async(e) => {
     e.preventDefault();
@@ -38,7 +47,35 @@ const HomeSearch = () => {
       toast.error("Please upload an image first");
       return;
     }
+
+    await processImageFn(searchImage);
   };
+
+  useEffect(() => {
+    if(processError)
+    {
+      toast.error(
+        "Failed to analyze image: " + (processError.message || "Unknown error")
+      )
+    }
+  }, [processError])
+
+  useEffect(() => {
+    if(processResult?.success)
+    {
+      const params = new URLSearchParams();
+
+      if(processResult.data.make) params.set("make", processResult.data.make);
+
+      if(processResult.data.bodyType)
+        params.set("bodyType", processResult.data.bodyType);
+
+      if(processResult.data.color)
+        params.set("color", processResult.data.color);
+
+      router.push(`/cars?${params.toString()}`);
+    }
+  }, [processResult])
 
   const onDrop = (acceptedFiles) => {
     const file  = acceptedFiles[0];
@@ -162,7 +199,9 @@ const HomeSearch = () => {
             type = "submit"
             className="w-full mt-2"
             disabled= {isUploading || isProcessing}>
-              {isUploading ? "Uploading..." : "Search with this Image"}
+              {isUploading ? "Uploading..." : 
+               isProcessing ? "Analyzing Image..." :
+              "Search with this Image"}
             </Button>}
 
           </form>
