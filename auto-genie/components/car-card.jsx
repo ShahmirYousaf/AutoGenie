@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Card, CardContent } from './ui/card'
 import Image from 'next/image'
 import { CarIcon, Heart } from 'lucide-react'
@@ -12,6 +12,13 @@ import { useRouter } from 'next/navigation';
 const CarCard = ({car}) => {
 const router = useRouter();
 const [saved, setSaved] = useState(car.wishlisted);
+const [formattedPrice, setFormattedPrice] = useState(null);
+  
+  useEffect(() => {
+    if (car && car.price) {
+      setFormattedPrice(car.price.toLocaleString());
+    }
+  }, [car]);
 const handleToggleSave = async(e) => {
 
 }
@@ -52,7 +59,7 @@ const handleToggleSave = async(e) => {
                 <h3 className='text-lg font-bold line-clamp-1'>
                     {car.make} {car.model}
                 </h3>
-                <span className='text-xl font-bold text-blue-600'> PKR {car.price.toLocaleString()}</span>
+                <span className='text-xl font-bold text-blue-600'> PKR {formattedPrice}</span>
             </div>
             
             <div className='text-gray-600 mb-2 flex items-center'>
