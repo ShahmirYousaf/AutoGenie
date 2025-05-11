@@ -1,10 +1,14 @@
-
 import { PrismaClient } from "./generated/prisma";
-export const db = globalThis.prisma || new PrismaClient();
+
+// Configure PrismaClient with logging options
+export const db = globalThis.prisma || new PrismaClient({
+  log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"], // Log only errors in production
+});
 
 if (process.env.NODE_ENV !== "production") {
   globalThis.prisma = db;
 }
 
-// Basically what we are doing is that new Prisma client will create new instance whenever we will rebuild or run our app in Dev Mode so for that
-// we use the global variable which ensures that prisma client instance is reused during development
+// Explanation:
+// - In development, log warnings and errors to help debug issues.
+// - In production, log only errors to avoid excessive logging.
