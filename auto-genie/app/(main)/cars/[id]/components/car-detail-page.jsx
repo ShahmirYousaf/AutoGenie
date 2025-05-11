@@ -105,7 +105,7 @@ const CarDetails = ({ car, testDriveInfo }) =>{
       router.push("/sign-in");
       return;
     }
-    router.push(`/test-drive/${car.id}`);
+    router.push(`/Test-Drive/${car.id}`);
   };
 
   return (
