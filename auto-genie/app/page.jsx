@@ -5,9 +5,11 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { bodyTypes, carMakes, faqItems} from "@/lib/data";
 import { SignedOut } from "@clerk/nextjs";
-import { Calendar, Car, ChevronRight, Shield } from "lucide-react";
+import { Calendar, Car, ChevronRight, Facebook, Instagram, Linkedin, Shield, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { CarIcon} from 'lucide-react';
+
 
 export default async function Home() {
   const featuredCars = await getFeaturedCars();
@@ -218,6 +220,117 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <footer className="bg-gray-900 text-white pt-12 pb-6">
+             <div className="container mx-auto px-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8">
+                {/* Brand Info */}
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <Car className="h-8 w-8 text-blue-400" />
+                    <span className="text-2xl font-bold text-white">AutoGenie</span>
+                  </div>
+                  <p className="text-gray-400">
+                    Your smart AI Car Marketplace. Find your perfect vehicle with our AI-powered features.
+                  </p>
+                  <div className="flex space-x-4">
+                    <a href="#" className="text-gray-400 hover:text-white transition">
+                      <Twitter className="h-6 w-6" />
+                    </a>
+                    <a href="#" className="text-gray-400 hover:text-white transition">
+                      <Facebook className="h-6 w-6" />
+                    </a>
+                    <a href="#" className="text-gray-400 hover:text-white transition">
+                      <Instagram className="h-6 w-6" />
+                    </a>
+                    <a href="#" className="text-gray-400 hover:text-white transition">
+                      <Linkedin className="h-6 w-6" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Quick Links */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+                  <ul className="space-y-2">
+                    <li>
+                      <Link href="/" className="text-gray-400 hover:text-white transition">
+                        Home
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/cars" className="text-gray-400 hover:text-white transition">
+                        Browse Cars
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/saved-cars" className="text-gray-400 hover:text-white transition">
+                        Saved Cars
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/reservations" className="text-gray-400 hover:text-white transition">
+                        Reservations
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Legal Links */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Legal</h3>
+                  <ul className="space-y-2">
+                    <li>
+                      <Link href="/privacy" className="text-gray-400 hover:text-white transition">
+                        Privacy Policy
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/terms" className="text-gray-400 hover:text-white transition">
+                        Terms of Service
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/contact" className="text-gray-400 hover:text-white transition">
+                        Contact Us
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+      
+                  {/* Newsletter */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Stay Updated</h3>
+                    <p className="text-gray-400 mb-4">
+                      Subscribe to our newsletter for the latest car deals and updates.
+                    </p>
+                    <div className="flex">
+                      <input
+                        type="email"
+                        placeholder="Your email"
+                        className="bg-gray-800 text-white px-4 py-2 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                      />
+                      <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-r transition">
+                        Subscribe
+                      </button>
+                    </div>
+                  </div>
+                </div>
+      
+                {/* Copyright */}
+                <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
+                  <p className="text-gray-400 text-sm">
+                    © {new Date().getFullYear()} AutoGenie. All rights reserved.
+                  </p>
+                  <div className="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" className="text-gray-400 hover:text-white text-sm transition">Privacy Policy</a>
+                    <a href="#" className="text-gray-400 hover:text-white text-sm transition">Terms of Service</a>
+                    <a href="#" className="text-gray-400 hover:text-white text-sm transition">Cookies</a>
+                  </div>
+                </div>
+              </div>
+            </footer>
 
     </div>
   );

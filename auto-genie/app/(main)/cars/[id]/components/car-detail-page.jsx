@@ -227,14 +227,14 @@ const CarDetails = ({ car, testDriveInfo }) =>{
                     for 60 months
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
-                    *Based on $0 down payment and 4.5% interest rate
+                    *Based on PKR 0 down payment and 4.5% interest rate
                   </div>
                 </CardContent>
               </Card>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Vehiql Car Loan Calculator</DialogTitle>
+                <DialogTitle>AutoGenie Car Loan Calculator</DialogTitle>
                 <EmiCalculator price={car.price} />
               </DialogHeader>
             </DialogContent>
@@ -384,7 +384,7 @@ const CarDetails = ({ car, testDriveInfo }) =>{
             <div className="flex items-start gap-3">
               <LocateFixed className="h-5 w-5 text-blue-600 mt-1 flex-shrink-0" />
               <div>
-                <h4 className="font-medium">Vehiql Motors</h4>
+                <h4 className="font-medium">New Sunny Motors</h4>
                 <p className="text-gray-600">
                   {testDriveInfo.dealership?.address || "Not Available"}
                 </p>
