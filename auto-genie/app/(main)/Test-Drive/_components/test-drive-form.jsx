@@ -6,7 +6,7 @@ import { format, parseISO } from "date-fns";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Calendar1, Calendar1Icon, Car, CheckCircle2, Loader2 } from "lucide-react";
+import { Calendar1, Calendar1Icon, CalendarIcon, Car, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -311,7 +311,7 @@ export default function TestDriveForm({ car, testDriveInfo }) {
                   control={control}
                   render={({ field }) => (
                     <div>
-                      <Popover>
+                   <Popover>
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
@@ -320,7 +320,7 @@ export default function TestDriveForm({ car, testDriveInfo }) {
                               !field.value && "text-muted-foreground"
                             )}
                           >
-                            <Calendar1Icon   className="mr-2 h-4 w-4" />
+                            <CalendarIcon className="mr-2 h-4 w-4" />
                             {field.value
                               ? format(field.value, "PPP")
                               : "Pick a date"}
@@ -332,7 +332,7 @@ export default function TestDriveForm({ car, testDriveInfo }) {
                             selected={field.value}
                             onSelect={field.onChange}
                             disabled={isDayDisabled}
-                            initialFocus
+                            // initialFocus
                           />
                         </PopoverContent>
                       </Popover>

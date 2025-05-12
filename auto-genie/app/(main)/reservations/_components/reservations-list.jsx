@@ -16,7 +16,10 @@ export default function ReservationsList({ initialData }) {
 
   // Handle cancellation
   const handleCancelBooking = async (bookingId) => {
-    await cancelBookingFn(bookingId);
+    console.log("inside cancellation")
+    const data =await cancelBookingFn(bookingId);
+ 
+    console.log("data : ", data)
   };
 
   // Group bookings by status
