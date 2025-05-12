@@ -19,6 +19,14 @@ const CarCard = ({ car }) => {
     const [isSaved, setIsSaved] = useState(car.wishlisted);
     const { isSignedIn } = useAuth();
 
+    const [formattedPrice, setFormattedPrice] = useState(null);
+  
+    useEffect(() => {
+        if (car && car.price) {
+        setFormattedPrice(car.price.toLocaleString());
+        }
+    }, [car]);
+
     // Use the useFetch hook
     const {
         loading: isToggling,
@@ -90,10 +98,10 @@ const CarCard = ({ car }) => {
                         ? "text-red-500 hover:text-red-600"
                         : "text-gray-600 hover:text-gray-900"
                     }`}
-                    onClick={(e) => {
-        console.log("Button clicked"); // Debugging log
-        handleToggleSave(e);
-    }}> 
+                      onClick={(e) => {
+                        console.log("Button clicked"); // Debugging log
+                        handleToggleSave(e);
+                    }}> 
                     {isToggling ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
@@ -109,7 +117,7 @@ const CarCard = ({ car }) => {
                     <h3 className='text-lg font-bold line-clamp-1'>
                         {car.make} {car.model}
                     </h3>
-                    <span className='text-xl font-bold text-blue-600'> PKR {car.price.toLocaleString()}</span>
+                     <span className='text-xl font-bold text-blue-600'> PKR {formattedPrice}</span>
                 </div>
 
                 <div className='text-gray-600 mb-2 flex items-center'>
