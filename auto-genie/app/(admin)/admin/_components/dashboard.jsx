@@ -19,7 +19,7 @@ import {
 export function Dashboard({ initialData }) {
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Show error if data fetch failed
+ // Show error if data fetch failed
   if (!initialData || !initialData.success) {
     return (
       <Alert variant="destructive">
@@ -46,9 +46,9 @@ export function Dashboard({ initialData }) {
           <TabsTrigger value="test-drives">Test Drives</TabsTrigger>
         </TabsList>
 
-        {/* Overview Tab */}
+     
         <TabsContent value="overview" className="space-y-6">
-          {/* KPI Summary Cards */}
+        
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -108,7 +108,7 @@ export function Dashboard({ initialData }) {
             </Card>
           </div>
 
-          {/* Additional Overview Content */}
+         
           <Card>
             <CardHeader>
               <CardTitle>Dealership Summary</CardTitle>
@@ -142,7 +142,7 @@ export function Dashboard({ initialData }) {
                     </h3>
                     <div className="flex items-center">
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
-                        <div
+                        {/* <div
                           className="bg-blue-600 h-2.5 rounded-full"
                           style={{
                             width: `${
@@ -150,7 +150,7 @@ export function Dashboard({ initialData }) {
                               100
                             }%`,
                           }}
-                        ></div>
+                        ></div> */}
                       </div>
                       <span className="ml-2 text-sm">
                         {(
@@ -440,3 +440,13 @@ export function Dashboard({ initialData }) {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+  

@@ -2,12 +2,12 @@ import { getDashboardData } from "@/actions/admin";
 import { Dashboard } from "./_components/dashboard";
 
 export const metadata = {
-  title: "Dashboard | Vehiql Admin",
-  description: "Admin dashboard for Vehiql car marketplace",
+  title: "Dashboard | Auto-Genie Admin",
+  description: "Admin dashboard for  Auto-genie",
 };
 
 export default async function AdminDashboardPage() {
-  // Fetch dashboard data
+
   const dashboardData = await getDashboardData();
 
   return (

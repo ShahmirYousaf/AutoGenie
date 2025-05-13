@@ -20,15 +20,11 @@ export async function getAdmin() {
   return { authorized: true, user };
 }
 
-/**
- * Get all test drives for admin with filters
- */
 export async function getAdminTestDrives({ search = "", status = "" }) {
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    // Verify admin status
     const user = await db.user.findUnique({
       where: { clerkUserId: userId },
     });
@@ -37,10 +33,9 @@ export async function getAdminTestDrives({ search = "", status = "" }) {
       throw new Error("Unauthorized access");
     }
 
-    // Build where conditions
+   
     let where = {};
 
-    // Add status filter
     if (status) {
       where.status = status;
     }
@@ -175,113 +170,209 @@ export async function updateTestDriveStatus(bookingId, newStatus) {
 }
 
 export async function getDashboardData() {
-  try {
-    const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorized");
 
-    // Get user
-    const user = await db.user.findUnique({
-      where: { clerkUserId: userId },
-    });
+  try{
+    const {userId}= await auth()
 
-    if (!user || user.role !== "ADMIN") {
-      return {
+    if (!userId) throw new Error ("unauthorized")
+      
+      const user= await db.user.findUnique({
+        where: {clerkUserId: userId} 
+      });
+
+      if (!user  || user.role!=="ADMIN"){
+        return {
         success: false,
         error: "Unauthorized",
-      };
-    }
+      }; 
 
-    // Fetch all necessary data in a single parallel operation
-    const [cars, testDrives] = await Promise.all([
-      // Get all cars with minimal fields
-      db.car.findMany({
-        select: {
-          id: true,
-          status: true,
-          featured: true,
-        },
-      }),
+      }
 
-      // Get all test drives with minimal fields
-      db.testDriveBooking.findMany({
-        select: {
-          id: true,
-          status: true,
-          carId: true,
-        },
-      }),
-    ]);
-
-    // Calculate car statistics
-    const totalCars = cars.length;
-    const availableCars = cars.filter(
-      (car) => car.status === "AVAILABLE"
-    ).length;
-    const soldCars = cars.filter((car) => car.status === "SOLD").length;
-    const unavailableCars = cars.filter(
-      (car) => car.status === "UNAVAILABLE"
-    ).length;
-    const featuredCars = cars.filter((car) => car.featured === true).length;
-
-    // Calculate test drive statistics
-    const totalTestDrives = testDrives.length;
-    const pendingTestDrives = testDrives.filter(
-      (td) => td.status === "PENDING"
-    ).length;
-    const confirmedTestDrives = testDrives.filter(
-      (td) => td.status === "CONFIRMED"
-    ).length;
-    const completedTestDrives = testDrives.filter(
-      (td) => td.status === "COMPLETED"
-    ).length;
-    const cancelledTestDrives = testDrives.filter(
-      (td) => td.status === "CANCELLED"
-    ).length;
-    const noShowTestDrives = testDrives.filter(
-      (td) => td.status === "NO_SHOW"
-    ).length;
-
-    // Calculate test drive conversion rate
-    const completedTestDriveCarIds = testDrives
-      .filter((td) => td.status === "COMPLETED")
-      .map((td) => td.carId);
-
-    const soldCarsAfterTestDrive = cars.filter(
-      (car) =>
-        car.status === "SOLD" && completedTestDriveCarIds.includes(car.id)
-    ).length;
-
-    const conversionRate =
-      completedTestDrives > 0
-        ? (soldCarsAfterTestDrive / completedTestDrives) * 100
-        : 0;
-
-    return {
-      success: true,
-      data: {
-        cars: {
-          total: totalCars,
-          available: availableCars,
-          sold: soldCars,
-          unavailable: unavailableCars,
-          featured: featuredCars,
-        },
-        testDrives: {
-          total: totalTestDrives,
-          pending: pendingTestDrives,
-          confirmed: confirmedTestDrives,
-          completed: completedTestDrives,
-          cancelled: cancelledTestDrives,
-          noShow: noShowTestDrives,
-          conversionRate: parseFloat(conversionRate.toFixed(2)),
-        },
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching dashboard data:", error.message);
-    return {
-      success: false,
-      error: error.message,
-    };
+  const carData = await db.car.findMany({
+  select: {
+    id: true,
+    status: true,
+    featured: true
   }
+});
+
+const testDriveData = await db.testDriveBooking.findMany({
+  select: {
+    carId: true,
+    status: true
+  }
+});
+
+  const totalCars = carData.length;
+  const unavailable=carData.filter(car=>car.status==="UNAVAILABLE").length
+  const avail_cars = carData.filter(car => car.status === "AVAILABLE").length;
+  const soldCars = carData.filter(car => car.status === "SOLD").length;
+  const featuredCars = carData.filter(car => car.featured).length;
+
+  const totaltestDrives = testDriveData.length;
+  const pendingTestDrives = testDriveData.filter(td => td.status === "PENDING").length;
+  const confirmedTestDrives = testDriveData.filter(td => td.status === "CONFIRMED").length;
+  const completedTestDrives = testDriveData.filter(td => td.status === "COMPLETED").length;
+  const cancelledTestDrives = testDriveData.filter(td => td.status === "CANCELLED").length;
+  const noshowTestDrives = testDriveData.filter(td => td.status === "NO_SHOW").length;
+
+  const completedTestDriveCarIds = testDriveData
+    .filter(td => td.status === "COMPLETED")
+    .map(td => td.carId);
+
+  const soldCarsAfterTestDrive = carData.filter(
+    car => completedTestDriveCarIds.includes(car.id) && car.status === "SOLD"
+  ).length;
+
+  const conversionRate = completedTestDrives > 0 ? (soldCarsAfterTestDrive / completedTestDrives) * 100 : 0;
+
+      return{
+        success: true,
+        data:{
+        cars:{
+          total:totalCars,
+          available:avail_cars,
+          unavailable:unavailable,
+          featured:featuredCars,
+          sold:soldCars,
+        },
+
+        testDrives:{
+          total:totaltestDrives,
+          pending: pendingTestDrives,
+          confirmed:confirmedTestDrives,
+          completed:completedTestDrives,
+          cancelled:cancelledTestDrives,
+          noShow: noshowTestDrives,
+          conversionRate: parseFloat(conversionRate.toFixed(2)),
+
+        }
+      }
+      }
+
+
+
+
+  } catch(error){
+    console.error("error fetching dashboard data", error.message);
+      return{
+        success: false,
+        error:error.message
+      }
+  }
+ 
 }
+
+
+
+
+
+ // try {
+  //   const { userId } = await auth();
+  //   if (!userId) throw new Error("Unauthorized");
+
+  //   // Get user
+  //   const user = await db.user.findUnique({
+  //     where: { clerkUserId: userId },
+  //   });
+
+  //   if (!user || user.role !== "ADMIN") {
+  //     return {
+  //       success: false,
+  //       error: "Unauthorized",
+  //     };
+  //   }
+
+  //   // Fetch all necessary data in a single parallel operation
+  //   const [cars, testDrives] = await Promise.all([
+  //     // Get all cars with minimal fields
+  //     db.car.findMany({
+  //       select: {
+  //         id: true,
+  //         status: true,
+  //         featured: true,
+  //       },
+  //     }),
+
+  //     // Get all test drives with minimal fields
+  //     db.testDriveBooking.findMany({
+  //       select: {
+  //         id: true,
+  //         status: true,
+  //         carId: true,
+  //       },
+  //     }),
+  //   ]);
+
+  //   // Calculate car statistics
+  //   const totalCars = cars.length;
+  //   const availableCars = cars.filter(
+  //     (car) => car.status === "AVAILABLE"
+  //   ).length;
+  //   const soldCars = cars.filter((car) => car.status === "SOLD").length;
+  //   const unavailableCars = cars.filter(
+  //     (car) => car.status === "UNAVAILABLE"
+  //   ).length;
+  //   const featuredCars = cars.filter((car) => car.featured === true).length;
+
+  //   // Calculate test drive statistics
+  //   const totalTestDrives = testDrives.length;
+  //   const pendingTestDrives = testDrives.filter(
+  //     (td) => td.status === "PENDING"
+  //   ).length;
+  //   const confirmedTestDrives = testDrives.filter(
+  //     (td) => td.status === "CONFIRMED"
+  //   ).length;
+  //   const completedTestDrives = testDrives.filter(
+  //     (td) => td.status === "COMPLETED"
+  //   ).length;
+  //   const cancelledTestDrives = testDrives.filter(
+  //     (td) => td.status === "CANCELLED"
+  //   ).length;
+  //   const noShowTestDrives = testDrives.filter(
+  //     (td) => td.status === "NO_SHOW"
+  //   ).length;
+
+  //   // Calculate test drive conversion rate
+  //   const completedTestDriveCarIds = testDrives
+  //     .filter((td) => td.status === "COMPLETED")
+  //     .map((td) => td.carId);
+
+  //   const soldCarsAfterTestDrive = cars.filter(
+  //     (car) =>
+  //       car.status === "SOLD" && completedTestDriveCarIds.includes(car.id)
+  //   ).length;
+
+  //   const conversionRate =
+  //     completedTestDrives > 0
+  //       ? (soldCarsAfterTestDrive / completedTestDrives) * 100
+  //       : 0;
+
+  //   return {
+  //     success: true,
+  //     data: {
+  //       cars: {
+  //         total: totalCars,
+  //         available: availableCars,
+  //         sold: soldCars,
+  //         unavailable: unavailableCars,
+  //         featured: featuredCars,
+  //       },
+  //       testDrives: {
+  //         total: totalTestDrives,
+  //         pending: pendingTestDrives,
+  //         confirmed: confirmedTestDrives,
+  //         completed: completedTestDrives,
+  //         cancelled: cancelledTestDrives,
+  //         noShow: noShowTestDrives,
+  //         conversionRate: parseFloat(conversionRate.toFixed(2)),
+  //       },
+  //     },
+  //   };
+  // } catch (error) {
+  //   console.error("Error fetching dashboard data:", error.message);
+  //   return {
+  //     success: false,
+  //     error: error.message,
+  //   };
+  // }

@@ -4,11 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Calendar1, Calendar1Icon, CalendarIcon, Car, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
@@ -35,24 +34,14 @@ import bookTestDrive from "@/actions/test-drive";
 import { toast } from "sonner";
 import useFetch from "@/hooks/useFetch";
 
-// Define Zod schema for form validation
-const testDriveSchema = z.object({
-  date: z.date({
-    required_error: "Please select a date for your test drive",
-  }),
-  timeSlot: z.string({
-    required_error: "Please select a time slot",
-  }),
-  notes: z.string().optional(),
-});
-
 export default function TestDriveForm({ car, testDriveInfo }) {
   const router = useRouter();
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [bookingDetails, setBookingDetails] = useState(null);
+  const [disable, setDisableDate]=useState(false)
 
-  // Initialize react-hook-form with zod resolver
+  // Initialize react-hook-form
   const {
     control,
     handleSubmit,
@@ -61,7 +50,6 @@ export default function TestDriveForm({ car, testDriveInfo }) {
     reset,
     formState: { errors, isValid },
   } = useForm({
-    resolver: zodResolver(testDriveSchema),
     defaultValues: {
       date: undefined,
       timeSlot: undefined,
@@ -165,30 +153,27 @@ export default function TestDriveForm({ car, testDriveInfo }) {
     setValue("timeSlot", "");
   }, [selectedDate]);
 
-  // Create a function to determine which days should be disabled
   const isDayDisabled = (day) => {
-    // Disable past dates
+    
     if (day < new Date()) {
-      return true;
+       return true;
     }
-    else{
-      return false;
-    }
-
-    // // Get day of week
-    // const dayOfWeek = format(day, "EEEE").toUpperCase();
-
-    // // Find working hours for the day
-    // const daySchedule = dealership?.workingHours?.find(
-    //   (schedule) => schedule.dayOfWeek === dayOfWeek
-    // );
-
-    // // Disable if dealership is closed on this day
-    // return !daySchedule || !daySchedule.isOpen;
+    return false;
   };
 
-  // Submit handler
+  // Submit handler with manual validation
   const onSubmit = async (data) => {
+    // Manual validation
+    if (!data.date) {
+      toast.error("Please select a date for your test drive");
+      return;
+    }
+
+    if (!data.timeSlot) {
+      toast.error("Please select a time slot");
+      return;
+    }
+
     const selectedSlot = availableTimeSlots.find(
       (slot) => slot.id === data.timeSlot
     );
@@ -311,7 +296,7 @@ export default function TestDriveForm({ car, testDriveInfo }) {
                   control={control}
                   render={({ field }) => (
                     <div>
-                   <Popover>
+                      <Popover>
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
@@ -332,8 +317,10 @@ export default function TestDriveForm({ car, testDriveInfo }) {
                             selected={field.value}
                             onSelect={field.onChange}
                             disabled={isDayDisabled}
-                            // initialFocus
+                            initialFocus
+                
                           />
+                          
                         </PopoverContent>
                       </Popover>
                       {errors.date && (
